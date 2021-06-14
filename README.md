@@ -5,14 +5,14 @@ Complete pipeline to train byte-pair-encoded embeddings (BPEmb) from scratch. Fu
 
 ## run
 
-- ```apt install grep && pip install sentencepiece```
+- ```pip install sentencepiece```
 - ```git clone https://github.com/stanfordnlp/glove && cd glove && make```
 - set parameter in: bpemb.py, glove/demo.sh
 - ```./bpemb.py```
 
 ## about the paper
 
-Benjamin Heinzerling and Michael Strube. 2018. BPEmb: Tokenization-free Pre-trained Subword Embeddings in 275 Languages. In Proceedings of the Eleventh International Conference on Language Resources and Evaluation (LREC 2018), Miyazaki, Japan. European Language Resources Association (ELRA).
+Benjamin Heinzerling and Michael Strube. 2018. _BPEmb: Tokenization-free Pre-trained Subword Embeddings in 275 Languages._ In Proceedings of the Eleventh International Conference on Language Resources and Evaluation (LREC 2018), Miyazaki, Japan. European Language Resources Association (ELRA).
 
 > We apply BPE1 to all Wikipedias2 of sufficient size with various o and pre-train embeddings for the resulting BPE symbol using GloVe (Pennington et al., 2014), resulting in byte-pair embeddings for 275 languages. To allow study- ing the effect the number of BPE merge operations and of the embedding dimensionality, we provide embeddings for 1000, 3000, 5000, 10000, 25000, 50000, 100000 and 200000 merge operations, with dimensions 25, 50, 100, 200, and 300.
 
@@ -24,7 +24,7 @@ Benjamin Heinzerling and Michael Strube. 2018. BPEmb: Tokenization-free Pre-trai
 
 ## implementation notes
 
-- 1. subwords lernen
+1. subwords lernen
     - https://github.com/google/sentencepiece
     - python wrapper: https://github.com/google/sentencepiece/blob/master/python/README.md
     - training parameters: https://github.com/google/sentencepiece/blob/master/doc/options.md
@@ -41,7 +41,7 @@ Benjamin Heinzerling and Michael Strube. 2018. BPEmb: Tokenization-free Pre-trai
                 - aber: definieren von user_defined_symbols (z.b. emoji) garantiert nicht, dass diese im vokabular enthalten sind -> "If this symbol is included in the input text, this symbol is always extracted as one piece.", vgl. https://github.com/google/sentencepiece/blob/master/doc/special_symbols.md + dazu kommt: pieces aus den twitter daten würden aufgrund der viel geringeren datenmenge nicht im vokabular landen
             - fazit: für bessere emoji-tokenisierung hilft nur mehr twitter scrapen
 
-- 2. embedding lernen
+2. embedding lernen
     - texte mit bpe model encoden
     - train glove
         - https://github.com/stanfordnlp/GloVe
@@ -51,7 +51,7 @@ Benjamin Heinzerling and Michael Strube. 2018. BPEmb: Tokenization-free Pre-trai
     - output: write_header=1
         - grund: bpemb lädt glove embedding via gensim.models.KeyedVectors.load_word2vec_format()
 
-- 3. in bpemb laden
+3. in bpemb laden
     - BPEmb(model_file='en-custom-10k.model', emb_file='en-custom-10k-vectors.txt', dim=300)
     - model_file: ``Path'', optional (default = None)
         Path to a custom SentencePiece model file.
@@ -67,6 +67,7 @@ Benjamin Heinzerling and Michael Strube. 2018. BPEmb: Tokenization-free Pre-trai
     - lösung 1
         - alle pieces im bpe model triggern
         - encode() parameter: https://github.com/google/sentencepiece/blob/master/src/sentencepiece_processor.h
+            ```
             for _ in range(10):
             ...     sp.encode('This is a test', out_type=str, enable_sampling=True, alpha=0.1)
             ... 
@@ -80,6 +81,7 @@ Benjamin Heinzerling and Michael Strube. 2018. BPEmb: Tokenization-free Pre-trai
             ['▁', 'T', 'h', 'is', '▁', 'is', '▁', 'a', '▁', 'te', 'st']
             ['▁', 'This', '▁', 'i', 's', '▁a', '▁', 't', 'e', 'st']
             ['▁This', '▁', 'is', '▁a', '▁', 't', 'est']
+            ```
     - grund 2
         - spezielle unicode character entfallen beim glove vokabular bzw. spätestens wenn die embedding file von bpemb() geladen wird, kommt es wieder zum mismatch der vokabulare -> indexerror
     - lösung 2
@@ -104,9 +106,9 @@ Benjamin Heinzerling and Michael Strube. 2018. BPEmb: Tokenization-free Pre-trai
         - bpe tokenization ist probabilistisch
             - bpe model muss gesampled werden, um alle pieces zu bekommen
         - die vokabulare von bpe model + embedding müssen die selbe reihenfolge haben
-            - embedding file reorder + sanity check -> siehe bpemb-custom.py
-                - pieces, die nicht im embedding gefunden werden -> als erstes vektor von partial match, falls nicht -> vektor von <unk>
-            - nur 2 pieces nicht im embedding gefunden: <s>, </s>
+            - embedding file reorder + sanity check -> siehe bpemb.py
+                - pieces, die nicht im embedding gefunden werden -> als erstes vektor von partial match, falls nicht -> vektor von ```<unk>```
+            - nur 2 pieces nicht im embedding gefunden: ```<s>```, ```</s>```
         - der einzige wirklich test
             - vergleich output von bpemb.embed() mit values in embedding file
                 - impliziert den roundtrip von string -> id -> index -> vector
