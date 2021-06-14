@@ -12,7 +12,7 @@ Complete pipeline to train byte-pair-encoded embeddings (BPEmb) from scratch. Fu
 
 ## about the paper
 
-Benjamin Heinzerling and Michael Strube. 2018. BPEmb: Tokenization-free Pre-trained Subword Embeddings in 275 Languages. In Proceedings of the Eleventh International Conference on Language Resources and Evaluation (LREC 2018), Miyazaki, Japan. European Language Resources Association (ELRA).
+Benjamin Heinzerling and Michael Strube. 2018. _BPEmb: Tokenization-free Pre-trained Subword Embeddings in 275 Languages._ In Proceedings of the Eleventh International Conference on Language Resources and Evaluation (LREC 2018), Miyazaki, Japan. European Language Resources Association (ELRA).
 
 > We apply BPE1 to all Wikipedias2 of sufficient size with various o and pre-train embeddings for the resulting BPE symbol using GloVe (Pennington et al., 2014), resulting in byte-pair embeddings for 275 languages. To allow study- ing the effect the number of BPE merge operations and of the embedding dimensionality, we provide embeddings for 1000, 3000, 5000, 10000, 25000, 50000, 100000 and 200000 merge operations, with dimensions 25, 50, 100, 200, and 300.
 
@@ -67,6 +67,7 @@ Benjamin Heinzerling and Michael Strube. 2018. BPEmb: Tokenization-free Pre-trai
     - lösung 1
         - alle pieces im bpe model triggern
         - encode() parameter: https://github.com/google/sentencepiece/blob/master/src/sentencepiece_processor.h
+            ```
             for _ in range(10):
             ...     sp.encode('This is a test', out_type=str, enable_sampling=True, alpha=0.1)
             ... 
@@ -80,6 +81,7 @@ Benjamin Heinzerling and Michael Strube. 2018. BPEmb: Tokenization-free Pre-trai
             ['▁', 'T', 'h', 'is', '▁', 'is', '▁', 'a', '▁', 'te', 'st']
             ['▁', 'This', '▁', 'i', 's', '▁a', '▁', 't', 'e', 'st']
             ['▁This', '▁', 'is', '▁a', '▁', 't', 'est']
+            ```
     - grund 2
         - spezielle unicode character entfallen beim glove vokabular bzw. spätestens wenn die embedding file von bpemb() geladen wird, kommt es wieder zum mismatch der vokabulare -> indexerror
     - lösung 2
