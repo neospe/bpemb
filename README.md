@@ -5,10 +5,10 @@ Complete pipeline to train byte-pair-encoded embeddings (BPEmb) from scratch. Fu
 
 ## run
 
-- ```pip install sentencepiece```
-- ```git clone https://github.com/stanfordnlp/glove && cd glove && make```
+- `pip install sentencepiece`
+- `git clone https://github.com/stanfordnlp/glove && cd glove && make`
 - set parameter in: bpemb.py, glove/demo.sh
-- ```./bpemb.py```
+- `./bpemb.py`
 
 ## about the paper
 
@@ -20,7 +20,7 @@ Benjamin Heinzerling and Michael Strube. 2018. _BPEmb: Tokenization-free Pre-tra
 
 - Vocabulary size: Depending on your target domain, you will have to experiment with the vocabulary size. A vocabulary of 200k is good for a web corpus, otherwise the model gets too sparse. Non-Internet-size data works well with 10-50k items. See the (mostly German) implementation notes below for more.
 
-- Branch ```dataload``` integrates with a complete MLOps infrastructure: a data loader for various text classification data sets (```dataload```), optionally backed by GridFS (```datalake```), and feeding into an automated training and evaluation pipeline (```autofit```).
+- Branch `dataload` integrates with a complete MLOps infrastructure: a data loader for various text classification data sets (`dataload`), optionally backed by GridFS (```datalake```), and feeding into an automated training and evaluation pipeline (`autofit`).
 
 ## implementation notes
 
@@ -107,8 +107,8 @@ Benjamin Heinzerling and Michael Strube. 2018. _BPEmb: Tokenization-free Pre-tra
             - bpe model muss gesampled werden, um alle pieces zu bekommen
         - die vokabulare von bpe model + embedding müssen die selbe reihenfolge haben
             - embedding file reorder + sanity check -> siehe bpemb.py
-                - pieces, die nicht im embedding gefunden werden -> als erstes vektor von partial match, falls nicht -> vektor von ```<unk>```
-            - nur 2 pieces nicht im embedding gefunden: ```<s>```, ```</s>```
+                - pieces, die nicht im embedding gefunden werden -> als erstes vektor von partial match, falls nicht -> vektor von `<unk>`
+            - nur 2 pieces nicht im embedding gefunden: `<s>`, `</s>`
         - der einzige wirklich test
             - vergleich output von bpemb.embed() mit values in embedding file
                 - impliziert den roundtrip von string -> id -> index -> vector
